@@ -139,16 +139,23 @@ CustomAppBar(
 
 
 Properties Reference
-Property,Type,Default,Description
-title,String,"""App Title""",The title text displayed when search is closed.
-onChanged,void Function(String),null,Callback triggered whenever the search text changes (for live filtering).
-onSearch,void Function(String),null,"Callback triggered when the user submits the search (e.g., presses Enter)."
-notificationCount,int,0,Displays a red badge with the count next to the action icons.
-profileAvatar,Widget,null,"Custom widget (e.g., CircleAvatar) displayed as the profile button."
-backgroundColor,Color?,null,Background color of the AppBar. Affects theme-aware default icon/text color.
-titleStyle,TextStyle?,null,Style for the title text.
-bottom,PreferredSizeWidget?,null,"Widget displayed below the AppBar (e.g., TabBar)."
-keepSearchOpenAfterSubmit,bool,false,"If true, the search bar remains open after submission."
+| Property                    | Type                   | Default       | Description                         |
+| --------------------------- | ---------------------- | ------------- | ----------------------------------- |
+| `title`                     | `String`               | `"App Title"` | Title when search is closed.        |
+| `hintText`                  | `String?`              | `"Search..."` | Placeholder for search field.       |
+| `onChanged`                 | `Function(String)?`    | `null`        | Fires on every search text change.  |
+| `onSearch`                  | `Function(String)?`    | `null`        | Fires on search submit/enter.       |
+| `notificationCount`         | `int`                  | `0`           | Shows a red notification badge.     |
+| `profileAvatar`             | `Widget?`              | `null`        | A custom avatar/profile widget.     |
+| `backgroundColor`           | `Color?`               | `null`        | AppBar background color.            |
+| `leadingIconColor`          | `Color?`               | `auto`        | Auto-calculated from theme.         |
+| `actionIconColor`           | `Color?`               | `auto`        | Auto-calculated from theme.         |
+| `titleStyle`                | `TextStyle?`           | `null`        | Custom title style.                 |
+| `bottom`                    | `PreferredSizeWidget?` | `null`        | Widget below AppBar (e.g., TabBar). |
+| `bottomShape`               | `ShapeBorder?`         | `null`        | Custom shape for bottom corners.    |
+| `keepSearchOpenAfterSubmit` | `bool`                 | `false`       | Keeps search active after submit.   |
+| `toolbarHeight`             | `double`               | `56.0`        | Custom height.                      |
+"
 
 Additional information ℹ️
 Reporting Issues: If you encounter any bugs or have feature requests, please file an issue on the GitHub repository.
