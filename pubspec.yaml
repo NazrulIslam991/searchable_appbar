@@ -1,0 +1,23 @@
+name: custom_appbar
+version: 0.0.1
+description: A customizable Flutter AppBar widget with built-in search functionality.
+repository: https://github.com/NazrulIslam991/custom_appbar
+license: MIT
+
+
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^5.0.0
+
+
+flutter:
+  uses-material-design: true
