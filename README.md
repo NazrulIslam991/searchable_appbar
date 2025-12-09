@@ -137,6 +137,7 @@ CustomAppBar(
   ),
 ),
 
+```
 
 Properties Reference
 | Name                      | Type                   | Default              | Description                                              |
