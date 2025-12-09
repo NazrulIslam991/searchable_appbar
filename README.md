@@ -1,178 +1,222 @@
-# custom_appbar 🚀
+![GitHub code size](https://img.shields.io/github/languages/code-size/chandrabezzo/CountryCodePicker)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+![GitHub contributors](https://img.shields.io/github/contributors/chandrabezzo/CountryCodePicker)
+[![Pub](https://img.shields.io/pub/v/country_code_picker.svg)](https://pub.dartlang.org/packages/country_code_picker)
+[![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/in/salvatore-giordano/)
+[![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/in/chandra-abdul-fattah/)
 
-| Pub.dev | License | Platform |
-| :---: | :---: | :---: |
-| [![pub package](https://img.shields.io/pub/v/custom_appbar.svg)](https://pub.dev/packages/custom_appbar) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) | [![Platform](https://img.shields.io/badge/platform-flutter-blue.svg)](https://flutter.dev) |
+# country_code_picker
 
-A highly customizable Flutter `AppBar` widget with **built-in, animated search functionality**, automatic theme awareness, notification badges, and avatar support. Simplify your application header implementation with rich features out of the box.
+A flutter package for showing a country code selector.
 
----
+It supports i18n for 70 languages.
 
-## Features ✨
+Check the example on web! https://imtoori.dev/CountryCodePicker/#/
 
-The `CustomAppBar` is designed to be a drop-in replacement for `AppBar`, offering enhanced capabilities for modern mobile applications:
+<img src="https://raw.githubusercontent.com/Salvatore-Giordano/CountryCodePicker/master/screenshots/screen1.png" width="240"/>
+<img src="https://raw.githubusercontent.com/Salvatore-Giordano/CountryCodePicker/master/screenshots/screen2.png" width="240"/>
 
-* **Integrated Search:** Seamless transition between the title and a full-width **search text field** using a smooth cubic animation.
-* **Live Filtering Support:** Provides dedicated `onChanged` and `onSearch` callbacks for implementing real-time list filtering.
-* **Theme Awareness:** Automatically determines the appropriate text and icon colors (**White** for Dark/Colored backgrounds, **Black** for Light backgrounds) unless explicitly overridden.
-* **Notification Badge:** Easily display dynamic, non-intrusive **notification counts** directly on the action icon.
-* **Profile/Avatar Button:** Supports custom `Widget` for a profile picture or avatar in the actions list.
-* **Customizable Layout:** Full control over `toolbarHeight`, `bottom` widget (e.g., `TabBar`), `bottomShape`, and `titleAlignment`.
+## Usage
 
-
-
----
-
-## Getting started 📦
-
-### Installation
-
-1.  **Add the dependency** to your `pubspec.yaml` file:
-
-    ```yaml
-    dependencies:
-      custom_appbar: ^0.1.0
-    ```
-
-2.  **Run `flutter pub get`** in your terminal.
-
-### Prerequisites
-
-* Flutter SDK: `>=3.0.0`
-* Dart SDK: `>=2.18.0`
-
----
-
-## Usage 💻
-
-### 1. Basic Implementation (Search & Filtering)
-
-To integrate the app bar and enable live search filtering on your list data, use the `onChanged` property:
+Just put the component in your application setting the onChanged callback.
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:custom_appbar/custom_appbar.dart'; // Assuming your custom class is here
 
-class HomeScreen extends StatefulWidget {
-  // ...
-}
+@override
+ Widget build(BuildContext context) => new Scaffold(
+     body: Center(
+       child: CountryCodePicker(
+         onChanged: print,
+         // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+         initialSelection: 'IT',
+         favorite: ['+39','FR'],
+         // optional. Shows only country name and flag
+         showCountryOnly: false,
+         // optional. Shows only country name and flag when popup is closed.
+         showOnlyCountryWhenClosed: false,
+         // optional. aligns the flag and the Text left
+         alignLeft: false,
+       ),
+     ),
+ );
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<String> allItems = ['Apple', 'Banana', 'Cherry', 'Date'];
-  List<String> filteredItems = [];
+```
 
-  @override
-  void initState() {
-    super.initState();
-    filteredItems = allItems;
+Example:
+
+```dart
+
+void _onCountryChange(CountryCode countryCode) {
+    //TODO : manipulate the selected country code here
+    print("New Country selected: " + countryCode.toString());
   }
-  
-  // 💡 This function updates the list in real-time
-  void onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredItems = allItems;
-      } else {
-        filteredItems = allItems
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
-    });
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Product Catalog",
-        hintText: "Search fruits...",
-        onChanged: onSearchChanged, // Passes query for live filtering
-        keepSearchOpenAfterSubmit: true, // Keep search field active after hitting enter
-        backgroundColor: Colors.deepPurple,
-        notificationCount: 5,
-      ),
-      body: ListView.builder(
-        itemCount: filteredItems.length,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text(filteredItems[index]));
-        },
-      ),
-    );
-  }
-}
+```
 
-You can easily integrate a TabBar by utilizing the bottom property, and customize the look and feel using various style properties.
-// Example of using CustomAppBar with a TabBar
-CustomAppBar(
-  title: "Advanced Dashboard",
-  titleStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-  toolbarHeight: 65.0,
-  backgroundColor: Theme.of(context).primaryColor,
-  
-  // Custom Icon/Text Colors
-  leadingIconColor: Colors.yellow,
-  actionIconColor: Colors.yellow,
-  
-  // Profile Avatar and Notification Badge
-  notificationCount: 99, 
-  profileAvatar: const CircleAvatar(
-    radius: 12,
-    child: Text('U'),
-  ),
-  onProfileMenuSelected: (value) => print('Profile button tapped'),
+### i18n
 
-  // Custom Bottom Widget (TabBar)
-  bottom: const TabBar(
-    tabs: [
-      Tab(text: 'Feed'), 
-      Tab(text: 'Messages')
-    ],
-  ),
-  // Custom Shape for the AppBar
-  bottomShape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.only(
-      bottomLeft: Radius.circular(15),
-      bottomRight: Radius.circular(15),
-    ),
-  ),
-),
+Just add the `CountryLocalizations.delegate` in the list of your app delegates 
+
+### Default Usage (Localization Enabled)
+```dart
+ return new MaterialApp(
+      supportedLocales: [
+         Locale("af"),
+        Locale("am"),
+        Locale("ar"),
+        Locale("az"),
+        Locale("be"),
+        Locale("bg"),
+        Locale("bn"),
+        Locale("bs"),
+        Locale("ca"),
+        Locale("cs"),
+        Locale("da"),
+        Locale("de"),
+        Locale("el"),
+        Locale("en"),
+        Locale("es"),
+        Locale("et"),
+        Locale("fa"),
+        Locale("fi"),
+        Locale("fr"),
+        Locale("gl"),
+        Locale("ha"),
+        Locale("he"),
+        Locale("hi"),
+        Locale("hr"),
+        Locale("hu"),
+        Locale("hy"),
+        Locale("id"),
+        Locale("is"),
+        Locale("it"),
+        Locale("ja"),
+        Locale("ka"),
+        Locale("kk"),
+        Locale("km"),
+        Locale("ko"),
+        Locale("ku"),
+        Locale("ky"),
+        Locale("lt"),
+        Locale("lv"),
+        Locale("mk"),
+        Locale("ml"),
+        Locale("mn"),
+        Locale("ms"),
+        Locale("nb"),
+        Locale("nl"),
+        Locale("nn"),
+        Locale("no"),
+        Locale("pl"),
+        Locale("ps"),
+        Locale("pt"),
+        Locale("ro"),
+        Locale("ru"),
+        Locale("sd"),
+        Locale("sk"),
+        Locale("sl"),
+        Locale("so"),
+        Locale("sq"),
+        Locale("sr"),
+        Locale("sv"),
+        Locale("ta"),
+        Locale("tg"),
+        Locale("th"),
+        Locale("tk"),
+        Locale("tr"),
+        Locale("tt"),
+        Locale("uk"),
+        Locale("ug"),
+        Locale("ur"),
+        Locale("uz"),
+        Locale("vi"),
+        Locale("zh")
+      ],
+      localizationsDelegates: [
+        CountryLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+```
+
+### Force English (Localization Disabled)
+```dart
+ return new MaterialApp(
+      localizationsDelegates: [
+        CountryLocalizations.delegate(enableLocalization: false),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+```
+
+## Customization
+
+Here is a list of properties available to customizeccc your widget:
+
+| Name | Type | Description |
+|-----|-----|------|
+|onChanged| ValueChanged<CountryCode> | callback invoked when the selection changes |
+|onInit| ValueChanged<CountryCode> | callback invoked during initialization of the widget |
+|initialSelection| String | used to set the initial selected value |
+|favorite| List<String> | used to populate the favorite country list |
+|textStyle| TextStyle | TextStyle applied to the widget button |
+|padding| EdgeInsetsGeometry | the padding applied to the button |
+|showCountryOnly| bool | true if you want to see only the countries in the selection dialog |
+|searchDecoration| InputDecoration | decoration applied to the TextField search widget |
+|searchStyle| TextStyle | style applied to the TextField search widget text |
+|emptySearchBuilder| WidgetBuilder | use this to customize the widget used when the search returns 0 elements |
+|builder| Function(CountryCode) | use this to build a custom widget instead of the default FlatButton |
+|enabled| bool | set to false to disable the widget |
+|textOverflow| TextOverflow | the button text overflow behaviour |
+|dialogSize| Size | the size of the selection dialog |
+|countryFilter| List<String> | uses a list of strings to filter a sublist of countries |
+|showOnlyCountryWhenClosed| bool | if true it'll show only the country |
+|alignLeft| bool | aligns the flag and the Text to the left |
+|showFlag| bool | shows the flag everywhere |
+|showFlagMain| bool | shows the flag only when closed |
+|showFlagDialog| bool | shows the flag only in dialog |
+|flagWidth| double | the width of the flags |
+|flagDecoration| Decoration | used for styling the flags |
+|comparator| Comparator<CountryCode> | use this to sort the countries in the selection dialog |
+|hideSearch| bool | if true the search feature will be disabled |
+
+## Contributions
+
+Contributions of any kind are more than welcome! Feel free to fork and improve country_code_picker in any way you want, make a pull request, or open an issue.
 
 
-Properties Reference
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| title | String | "App Title" | The title text displayed when search is closed. |
-| leadingIcon | IconData | Icons.menu | The icon displayed at the leading position. |
-| onChanged | ValueChanged<String>? | null | Callback triggered whenever the search text changes (for live filtering). |
-| onSearch | ValueChanged<String>? | null | Callback triggered when the user submits the search (e.g., presses Enter). |
-| onLeadingPressed | VoidCallback? | null | Callback invoked when the leading icon is pressed. |
-| toolbarHeight | double | kToolbarHeight | Height of the AppBar toolbar. |
-| titleAlignment | Alignment | Alignment.centerLeft | Alignment of the title widget. |
-| bottomShape | ShapeBorder? | null | Shape applied to the bottom of the AppBar. |
-| bottom | PreferredSizeWidget? | null | Widget displayed below the AppBar (e.g., TabBar). |
-| backgroundColor | Color? | Theme-aware | Background color of the AppBar. |
-| leadingIconColor | Color? | Theme-aware | Color of the leading icon. |
-| actionIconColor | Color? | Theme-aware | Color of action icons (search, profile, notifications). |
-| textColor | Color? | Theme-aware | Default text color for title and search text. |
-| titleStyle | TextStyle? | null | TextStyle applied to the title. |
-| searchTextStyle | TextStyle? | null | TextStyle applied to the search TextField. |
-| hintTextStyle | TextStyle? | null | TextStyle applied to the search hint text. |
-| leadingIconSize | double | 24.0 | Size of the leading icon. |
-| actionIconSize | double | 24.0 | Size of action icons. |
-| profileAvatar | Widget? | null | Custom widget (e.g., CircleAvatar) displayed as profile button. |
-| popupMenuItems | List<PopupMenuEntry>? | null | List of menu items for profile/action menu. |
-| onProfileMenuSelected | ValueChanged<dynamic>? | null | Callback when a profile menu item is selected. |
-| notificationCount | int | 0 | Number displayed in red badge for notifications. |
-| hintText | String | "Search..." | Placeholder text for the search field. |
-| keepSearchOpenAfterSubmit | bool | false | Whether to keep the search bar open after pressing submit. |
-| searchIcon | IconData | Icons.search | Icon displayed to open search mode. |
-| closeIcon | IconData | Icons.close | Icon displayed to close search mode. |
+## Getting involved
+First of all, thank you for even considering to get involved. You are a real super :star:  and we :heart:  you!
 
-"
+### Reporting bugs and issues
+Use the configured [Github issue report template](https://github.com/imtoori/CountryCodePicker/issues/new?assignees=&labels=&template=bug_report.md&title=) when reporting an issue. Make sure to state your observations and expectations
+as objectively and informative as possible so that we can understand your need and be able to troubleshoot.
 
-Additional information ℹ️
-Reporting Issues: If you encounter any bugs or have feature requests, please file an issue on the GitHub repository.
+### Discussions and ideas
+We're happy to discuss and talk about ideas, post your
+question to [StackOverflow](https://stackoverflow.com/search?q=country+code+picker).
+## Contributors ✨
 
-Contributing: Contributions are welcome! Feel free to fork the repository and submit a pull request.
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-Version History: See the CHANGELOG.md for a complete history of changes.
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/chandra-abdul-fattah"><img src="https://avatars.githubusercontent.com/u/16184998?v=4?s=100" width="100px;" alt="Chandra Abdul Fattah"/><br /><sub><b>Chandra Abdul Fattah</b></sub></a><br /><a href="#infra-chandrabezzo" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/chandrabezzo/CountryCodePicker/commits?author=chandrabezzo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/imtoori"><img src="https://avatars.githubusercontent.com/u/20601437?v=4?s=100" width="100px;" alt="Salvatore Giordano"/><br /><sub><b>Salvatore Giordano</b></sub></a><br /><a href="#infra-imtoori" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/chandrabezzo/CountryCodePicker/commits?author=imtoori" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/nilashish-roy-b8a4a0171/"><img src="https://avatars.githubusercontent.com/u/96123041?v=4?s=100" width="100px;" alt="Nilashish Roy"/><br /><sub><b>Nilashish Roy</b></sub></a><br /><a href="#infra-mrroy121" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/chandrabezzo/CountryCodePicker/commits?author=mrroy121" title="Code">💻</a></td>
+   </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
