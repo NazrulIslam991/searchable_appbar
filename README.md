@@ -1,4 +1,4 @@
-# custom_appbar 🚀
+# custom_appbar
 
 | Pub.dev | License | Platform |
 | :---: | :---: | :---: |
@@ -8,22 +8,28 @@ A highly customizable Flutter `AppBar` widget with **built-in, animated search f
 
 ---
 
-## Features ✨
+## Features
 
-The `CustomAppBar` is designed to be a drop-in replacement for `AppBar`, offering enhanced capabilities for modern mobile applications:
+The `CustomAppBar` is a modern replacement for Flutter's default `AppBar`, with enhanced mobile UI features:
 
-* **Integrated Search:** Seamless transition between the title and a full-width **search text field** using a smooth cubic animation.
-* **Live Filtering Support:** Provides dedicated `onChanged` and `onSearch` callbacks for implementing real-time list filtering.
-* **Theme Awareness:** Automatically determines the appropriate text and icon colors (**White** for Dark/Colored backgrounds, **Black** for Light backgrounds) unless explicitly overridden.
-* **Notification Badge:** Easily display dynamic, non-intrusive **notification counts** directly on the action icon.
-* **Profile/Avatar Button:** Supports custom `Widget` for a profile picture or avatar in the actions list.
-* **Customizable Layout:** Full control over `toolbarHeight`, `bottom` widget (e.g., `TabBar`), `bottomShape`, and `titleAlignment`.
+• Integrated Search: Smooth title-to-search transition with cubic animation.  
+
+• Live Filtering: `onChanged` & `onSearch` callbacks for real-time list updates.  
+
+• Theme Aware: Auto adjusts text/icon color for light or dark backgrounds.  
+
+• Notification Badge: Displays dynamic counts on action icons.  
+
+• Profile/Avatar: Custom widget support for profile or avatar display.  
+
+• Custom Layout: Full control of `toolbarHeight`, `bottom` widget, `bottomShape`, and `titleAlignment`.  
+
 
 
 
 ---
 
-## Getting started 📦
+## Getting started 
 
 ### Installation
 
@@ -45,136 +51,134 @@ The `CustomAppBar` is designed to be a drop-in replacement for `AppBar`, offerin
 
 ## Usage 💻
 
-### 1. Basic Implementation (Search & Filtering)
+### 1. Basic AppBar with Title
 
-To integrate the app bar and enable live search filtering on your list data, use the `onChanged` property:
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:custom_appbar/custom_appbar.dart'; // Assuming your custom class is here
-
-class HomeScreen extends StatefulWidget {
-  // ...
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<String> allItems = ['Apple', 'Banana', 'Cherry', 'Date'];
-  List<String> filteredItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredItems = allItems;
-  }
-  
-  // 💡 This function updates the list in real-time
-  void onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredItems = allItems;
-      } else {
-        filteredItems = allItems
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Product Catalog",
-        hintText: "Search fruits...",
-        onChanged: onSearchChanged, // Passes query for live filtering
-        keepSearchOpenAfterSubmit: true, // Keep search field active after hitting enter
-        backgroundColor: Colors.deepPurple,
-        notificationCount: 5,
-      ),
-      body: ListView.builder(
-        itemCount: filteredItems.length,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text(filteredItems[index]));
-        },
-      ),
-    );
-  }
-}
-
-You can easily integrate a TabBar by utilizing the bottom property, and customize the look and feel using various style properties.
-// Example of using CustomAppBar with a TabBar
 CustomAppBar(
-  title: "Advanced Dashboard",
-  titleStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-  toolbarHeight: 65.0,
-  backgroundColor: Theme.of(context).primaryColor,
-  
-  // Custom Icon/Text Colors
-  leadingIconColor: Colors.yellow,
-  actionIconColor: Colors.yellow,
-  
-  // Profile Avatar and Notification Badge
-  notificationCount: 99, 
-  profileAvatar: const CircleAvatar(
-    radius: 12,
-    child: Text('U'),
-  ),
-  onProfileMenuSelected: (value) => print('Profile button tapped'),
-
-  // Custom Bottom Widget (TabBar)
-  bottom: const TabBar(
-    tabs: [
-      Tab(text: 'Feed'), 
-      Tab(text: 'Messages')
-    ],
-  ),
-  // Custom Shape for the AppBar
-  bottomShape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.only(
-      bottomLeft: Radius.circular(15),
-      bottomRight: Radius.circular(15),
-    ),
-  ),
-),
+  title: "Dashboard", // AppBar title
+  backgroundColor: Colors.blue, // Background color of the AppBar
+)
 
 ```
 
+### 2. AppBar with Leading Icon
+
+
+```dart
+CCustomAppBar(
+  title: "Dashboard", // AppBar title
+  leadingIcon: Icons.menu, // Leading icon (usually for drawer or back)
+  onLeadingPressed: () {
+    print("Menu pressed"); // Action when leading icon is pressed
+  },
+)
+
+
+```
+
+### 3. AppBar with Search
+
+
+```dart
+CustomAppBar(
+  title: "Search Example",
+  onSearch: (query) => print("Search submitted: $query"),
+  onChanged: (query) => print("Search changed: $query"),
+  hintText: "Type something...",
+  keepSearchOpenAfterSubmit: true,
+)
+
+
+```
+
+### 4. AppBar with Notification Badge
+
+
+```dart
+CustomAppBar(
+  title: "Notifications", // AppBar title
+  notificationCount: 7, // Display badge with count
+  actionIconColor: Colors.white, // Color of action icons (like notifications)
+)
+
+
+
+```
+
+### 5. AppBar with TabBar & Curved Bottom
+
+
+```dart
+TabController _tabController = TabController(length: 3, vsync: this); 
+// TabController to control TabBar tabs
+
+CustomAppBar(
+  title: "Dashboard", // AppBar title
+  backgroundColor: Colors.blue, // AppBar color
+  bottom: TabBar(
+    controller: _tabController, // Connect TabBar with TabController
+    tabs: const [
+      Tab(text: 'Home'), // Tab 1
+      Tab(text: 'Profile'), // Tab 2
+      Tab(text: 'Settings'), // Tab 3
+    ],
+    indicator: BoxDecoration(
+      color: Colors.white.withOpacity(0.3), // Indicator color
+      borderRadius: BorderRadius.circular(12), // Rounded corners for indicator
+    ),
+    labelColor: Colors.white, // Selected tab text color
+    unselectedLabelColor: Colors.white70, // Unselected tab text color
+  ),
+  bottomShape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(16), // Curved bottom of AppBar
+    ),
+  ),
+)
+
+```
+
+
 Properties Reference
-| Name                      | Type                   | Default              | Description                                              |
-| ------------------------- | ---------------------- | -------------------- | -------------------------------------------------------- |
-| title                     | String                 | "App Title"          | Text displayed when search is closed.                    |
-| leadingIcon               | IconData               | Icons.menu           | Icon displayed at leading position.                      |
-| onChanged                 | ValueChanged<String>?  | null                 | Triggered whenever search text changes (live filtering). |
-| onSearch                  | ValueChanged<String>?  | null                 | Triggered when search is submitted.                      |
-| onLeadingPressed          | VoidCallback?          | null                 | Callback when leading icon is pressed.                   |
-| toolbarHeight             | double                 | kToolbarHeight       | Height of the AppBar toolbar.                            |
-| titleAlignment            | Alignment              | Alignment.centerLeft | Alignment of the title widget.                           |
-| bottomShape               | ShapeBorder?           | null                 | Shape applied to AppBar bottom.                          |
-| bottom                    | PreferredSizeWidget?   | null                 | Widget displayed below the AppBar (e.g., TabBar).        |
-| backgroundColor           | Color?                 | Theme-aware          | Background color of the AppBar.                          |
-| leadingIconColor          | Color?                 | Theme-aware          | Color of the leading icon.                               |
-| actionIconColor           | Color?                 | Theme-aware          | Color of action icons.                                   |
-| textColor                 | Color?                 | Theme-aware          | Default text color for title and search text.            |
-| titleStyle                | TextStyle?             | null                 | TextStyle applied to title.                              |
-| searchTextStyle           | TextStyle?             | null                 | TextStyle applied to search TextField.                   |
-| hintTextStyle             | TextStyle?             | null                 | TextStyle applied to search hint text.                   |
-| leadingIconSize           | double                 | 24.0                 | Size of leading icon.                                    |
-| actionIconSize            | double                 | 24.0                 | Size of action icons.                                    |
-| profileAvatar             | Widget?                | null                 | Custom widget (e.g., CircleAvatar) as profile button.    |
-| popupMenuItems            | List<PopupMenuEntry>?  | null                 | List of menu items for profile/action menu.              |
-| onProfileMenuSelected     | ValueChanged<dynamic>? | null                 | Callback when a profile menu item is selected.           |
-| notificationCount         | int                    | 0                    | Number displayed in red badge for notifications.         |
-| hintText                  | String                 | "Search..."          | Placeholder text for the search field.                   |
-| keepSearchOpenAfterSubmit | bool                   | false                | Keep search bar open after submission.                   |
-| searchIcon                | IconData               | Icons.search         | Icon for opening search mode.                            |
-| closeIcon                 | IconData               | Icons.close          | Icon for closing search mode.                            |
+| Name                      | Type                    | Description                                   |
+| ------------------------- | ----------------------- | --------------------------------------------- |
+| title                     | `String`                | AppBar title           |
+| leadingIcon               | `IconData`              | Icon displayed at the leading position.       |
+| onSearch                  | `ValueChanged<String>?` | Callback on search submission.                |
+| onChanged                 | `ValueChanged<String>?` | Callback on every search input change.        |
+| onLeadingPressed          | `VoidCallback?`         | Triggered when leading icon is pressed.       |
+| toolbarHeight             | `double`                | Height of the AppBar.                         |
+| titleAlignment            | `Alignment`             | Alignment of the title widget.                |
+| bottomShape               | `ShapeBorder?`          | Shape applied to AppBar bottom.               |
+| bottom                    | `PreferredSizeWidget?`  | Widget displayed below AppBar (e.g., TabBar). |
+| backgroundColor           | `Color?`                | AppBar background color. |
+| leadingIconColor          | `Color?`                | Color of the leading icon.                    |
+| actionIconColor           | `Color?`                | Color of action icons.                        |
+| textColor                 | `Color?`                | Color for title and search text.      |
+| titleStyle                | `TextStyle?`            | Custom style for the title.                   |
+| searchTextStyle           | `TextStyle?`            | Style for search input text.                  |
+| hintTextStyle             | `TextStyle?`            | Style for search hint text.                   |
+| leadingIconSize           | `double`                | Size of leading icon.                         |
+| actionIconSize            | `double`                | Size of action icons.                         |
+| notificationCount         | `int`                   | Badge count for notifications.                |
+| hintText                  | `String`                | Placeholder text for search input.            |
+| keepSearchOpenAfterSubmit | `bool`                  | Keeps search open after submission.           |
+| searchIcon                | `IconData`              | Icon to open search mode.                     |
+| closeIcon                 | `IconData`              | Icon to close search mode.                    |
 
 
 
+---
 
-Additional information ℹ️
-Reporting Issues: If you encounter any bugs or have feature requests, please file an issue on the GitHub repository.
+## Additional Information ℹ️
 
-Contributing: Contributions are welcome! Feel free to fork the repository and submit a pull request.
+### Reporting Issues
+If you encounter any bugs or have feature requests, please feel free to **file an issue** on the [GitHub repository](https://github.com/NazrulIslam991/custom_appbar).
 
-Version History: See the CHANGELOG.md for a complete history of changes. solve kore ekta page a dau readme.add full dau
+### Contributing
+Contributions are always welcome! You can **fork the repository**, make your improvements, and submit a **pull request**. Let’s make this package better together. 
+
+### Version History
+For a complete history of changes, bug fixes, and updates, please refer to the `CHANGELOG.md` file included in this repository.
+
