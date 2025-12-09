@@ -4,7 +4,7 @@ typedef OnSearch = void Function(String query);
 typedef OnChanged = void Function(String query);
 typedef OnLeadingPressed = void Function();
 
-class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+class SearchableAppbar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final IconData leadingIcon;
   final OnSearch? onSearch;
@@ -32,7 +32,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final IconData searchIcon;
   final IconData closeIcon;
 
-  const CustomAppBar({
+  const SearchableAppbar({
     Key? key,
     this.title = "App Title",
     this.leadingIcon = Icons.menu,
@@ -63,7 +63,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  State<CustomAppBar> createState() => _CustomAppBarState();
+  State<SearchableAppbar> createState() => _SearchableAppbarState();
 
   @override
   Size get preferredSize {
@@ -75,7 +75,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
-class _CustomAppBarState extends State<CustomAppBar>
+class _SearchableAppbarState extends State<SearchableAppbar>
     with SingleTickerProviderStateMixin {
   bool _isSearching = false;
   final TextEditingController _controller = TextEditingController();

@@ -1,4 +1,4 @@
-# custom_appbar
+# searchable_appbar
 
 | Pub.dev | License | Platform |
 | :---: | :---: | :---: |
@@ -10,7 +10,7 @@ A highly customizable Flutter `AppBar` widget with **built-in, animated search f
 
 ## Features
 
-The `CustomAppBar` is a modern replacement for Flutter's default `AppBar`, with enhanced mobile UI features:
+The `searchable_appbar` is a modern replacement for Flutter's default `AppBar`, with enhanced mobile UI features:
 
 • Integrated Search: Smooth title-to-search transition with cubic animation.  
 
@@ -35,7 +35,7 @@ The `CustomAppBar` is a modern replacement for Flutter's default `AppBar`, with 
 
 ## pubspec.yaml
 ```yaml
-custom_appbar: <lastest version>
+searchable_appbar: <lastest version>
 ```
 
 2.  **Run `flutter pub get`** in your terminal.
@@ -48,7 +48,7 @@ custom_appbar: <lastest version>
 
 ## Import
 ```dart
-import 'package:custom_appbar/custom_appbar.dart';
+import 'package:searchable_appbar/searchable_appbar.dart';
 ```
 
 ## Usage 💻
@@ -57,7 +57,7 @@ import 'package:custom_appbar/custom_appbar.dart';
 
 
 ```dart
-CustomAppBar(
+SearchableAppbar(
   title: "Dashboard", // AppBar title
   backgroundColor: Colors.blue, // Background color of the AppBar
 )
@@ -68,7 +68,7 @@ CustomAppBar(
 
 
 ```dart
-CCustomAppBar(
+SearchableAppbar(
   title: "Dashboard", // AppBar title
   leadingIcon: Icons.menu, // Leading icon (usually for drawer or back)
   onLeadingPressed: () {
@@ -83,7 +83,7 @@ CCustomAppBar(
 
 
 ```dart
-CustomAppBar(
+SearchableAppbar(
   title: "Search Example",
   onSearch: (query) => print("Search submitted: $query"),
   onChanged: (query) => print("Search changed: $query"),
@@ -98,7 +98,7 @@ CustomAppBar(
 
 
 ```dart
-CustomAppBar(
+SearchableAppbar(
   title: "Notifications", // AppBar title
   notificationCount: 7, // Display badge with count
   actionIconColor: Colors.white, // Color of action icons (like notifications)
@@ -115,7 +115,7 @@ CustomAppBar(
 TabController _tabController = TabController(length: 3, vsync: this); 
 // TabController to control TabBar tabs
 
-CustomAppBar(
+SearchableAppbar(
   title: "Dashboard", // AppBar title
   backgroundColor: Colors.blue, // AppBar color
   bottom: TabBar(
@@ -176,7 +176,7 @@ Properties Reference
 ## Additional Information ℹ️
 
 ### Reporting Issues
-If you encounter any bugs or have feature requests, please feel free to **file an issue** on the [GitHub repository](https://github.com/NazrulIslam991/custom_appbar).
+If you encounter any bugs or have feature requests, please feel free to **file an issue** on the [GitHub repository](https://github.com/NazrulIslam991/searchable_appbar).
 
 ### Contributing
 Contributions are always welcome! You can **fork the repository**, make your improvements, and submit a **pull request**. Let’s make this package better together. 

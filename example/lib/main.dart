@@ -1,5 +1,5 @@
-import 'package:custom_appbar/custom_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:searchable_appbar/searchable_appbar.dart';
 
 void main() => runApp(const MyApp());
 
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       // CustomAppBar with all features
-      appBar: CustomAppBar(
+      appBar: SearchableAppbar(
         title: "Dashboard", // Title of AppBar
         leadingIcon: Icons.menu, // Leading icon
         backgroundColor: Colors.blue, // AppBar color
@@ -88,10 +88,6 @@ class _HomeScreenState extends State<HomeScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: myTabs,
-          indicator: BoxDecoration(
-            color: Colors.white.withOpacity(0.3), // Tab indicator color
-            borderRadius: BorderRadius.circular(12), // Rounded indicator
-          ),
           labelColor: Colors.white, // Selected tab text color
           unselectedLabelColor: Colors.white70, // Unselected tab text color
         ),
