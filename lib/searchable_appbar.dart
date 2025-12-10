@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 /// Callback signature for when a search query is submitted.
 typedef OnSearch = void Function(String query);
@@ -143,6 +144,11 @@ class _SearchableAppbarState extends State<SearchableAppbar>
   late AnimationController _anim;
   late Animation<double> _expand;
 
+  // --- Voice Search State and Controller ---
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  // -----------------------------------------
+
   @override
   void initState() {
     super.initState();
@@ -154,20 +160,37 @@ class _SearchableAppbarState extends State<SearchableAppbar>
       parent: _anim,
       curve: Curves.easeOutCubic,
     );
+
+    // Initialize speech recognition (optional but recommended for permission check)
+    _speech.initialize(
+      onError: (val) => debugPrint('Error: $val'),
+      onStatus: (val) => debugPrint('Status: $val'),
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _anim.dispose();
+    // Stop listening before disposing, if active
+    if (_speech.isListening) {
+      _speech.stop();
+    }
     super.dispose();
   }
 
   void _toggleSearch() {
+    // If we're currently listening, stop it before toggling search state
+    if (_isListening) {
+      _stopListening();
+    }
+
     setState(() {
       _isSearching = !_isSearching;
       if (_isSearching) {
         _anim.forward().then((_) {
+          // Check if the widget is still in the tree before using context
+          if (!mounted) return;
           // Request focus after the animation to ensure the keyboard pops up smoothly
           FocusScope.of(context).requestFocus(FocusNode());
         });
@@ -187,6 +210,11 @@ class _SearchableAppbarState extends State<SearchableAppbar>
 
     FocusScope.of(context).unfocus();
 
+    // If a search is submitted while listening, stop the listener
+    if (_isListening) {
+      _stopListening();
+    }
+
     if (!widget.keepSearchOpenAfterSubmit) {
       Future.delayed(const Duration(milliseconds: 50), () {
         _toggleSearch();
@@ -194,16 +222,74 @@ class _SearchableAppbarState extends State<SearchableAppbar>
     }
   }
 
+  // --- Voice Search Methods ---
+
+  void _startListening() async {
+    // Stop any existing listening session first
+    if (_speech.isListening) {
+      _stopListening();
+      return;
+    }
+
+    bool available = await _speech.initialize(
+      onError: (val) => debugPrint('Error: $val'),
+      onStatus: (val) => debugPrint('Status: $val'),
+    );
+
+    // Check if the widget is still in the tree after the async call
+    if (!mounted) return;
+
+    if (available) {
+      setState(() => _isListening = true);
+      _controller.clear();
+      _speech.listen(
+        onResult: (result) {
+          // Update the text field with the recognised words
+          _controller.text = result.recognizedWords;
+          widget.onChanged?.call(result.recognizedWords);
+
+          // If it's the final result, submit the search
+          if (result.finalResult) {
+            _stopListening();
+            _submitSearch(result.recognizedWords);
+          }
+        },
+      );
+    } else {
+      setState(() => _isListening = false);
+      debugPrint("The user has denied the use of speech recognition.");
+      // Use mounted check before showing SnackBar
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Voice search not available or permission denied.')),
+      );
+    }
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() => _isListening = false);
+  }
+
+  // ----------------------------
+
   Widget _buildSearchField() {
     final Color defaultSearchTextColor =
         widget.textColor ?? _getThemeAwareDefaultColor(context);
     final TextStyle defaultSearchTextStyle =
         TextStyle(color: defaultSearchTextColor);
 
-    // 0.7 * 255 = 178.5. Using 178 for alpha. This fixes the deprecated withOpacity issue.
+    // 0.7 * 255 = 178.5. Using 178 for alpha.
     final TextStyle defaultHintStyle = defaultSearchTextStyle.copyWith(
       color: defaultSearchTextColor.withAlpha(178),
     );
+
+    // Determine the effective color for the microphone icon
+    final Color micColor = _isListening ? Colors.red : defaultSearchTextColor;
+
+    // Determine the icon to show: Mic when idle, Mic/Close button when listening
+    final IconData micIcon = _isListening ? Icons.mic_off : Icons.mic;
 
     return FadeTransition(
       opacity: _expand,
@@ -218,10 +304,17 @@ class _SearchableAppbarState extends State<SearchableAppbar>
             textInputAction: TextInputAction.search,
             style: widget.searchTextStyle ?? defaultSearchTextStyle,
             decoration: InputDecoration(
-              hintText: widget.hintText,
+              hintText: _isListening
+                  ? 'Listening...'
+                  : widget.hintText, // Contextual hint
               hintStyle: widget.hintTextStyle ?? defaultHintStyle,
               border: InputBorder.none,
-              suffixIcon: null,
+              // *** MODIFIED: Added microphone icon ***
+              suffixIcon: IconButton(
+                icon: Icon(micIcon, color: micColor),
+                onPressed: _isListening ? _stopListening : _startListening,
+              ),
+              // ***************************************
             ),
             onChanged: widget.onChanged,
             onSubmitted: _submitSearch,
