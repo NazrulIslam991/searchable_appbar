@@ -1,5 +1,9 @@
 ## 0.0.3
 
+* Update: Readme.
+
+## 0.0.3
+
 * New Feature: Added microphone icon to the search bar for voice input functionality.
 
 ## 0.0.2 
