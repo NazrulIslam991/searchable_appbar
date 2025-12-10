@@ -251,7 +251,8 @@ SearchableAppbar(
 ```
 
 
-Properties Reference
+## Properties Reference
+
 | Name                      | Type                    | Description                                   |
 | ------------------------- | ----------------------- | --------------------------------------------- |
 | title                     | `String`                | AppBar title           |
