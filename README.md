@@ -125,22 +125,6 @@ SearchableAppbar(
   keepSearchOpenAfterSubmit: true, 
 )
 ```
-
-```dart
-SearchableAppbar(
-  title: "Search Example",
-  // Callback when text is submitted (e.g., hitting Enter or finishing voice input)
-  onSearch: (query) => print("Search submitted: $query"),
-  
-  // Callback for every keystroke or every word recognized during voice input
-  onChanged: (query) => print("Current search text: $query"),
-  
-  hintText: "Type or tap the mic for voice search...",
-  
-  // Set to true if you want the search bar to stay open after submission
-  keepSearchOpenAfterSubmit: true, 
-)
-```
 AppBar with Live Filtering and Tabs: 
 
 This example combines the use of bottom (for TabBar) and the search callbacks (onSearch/onChanged) to implement real-time list filtering within a Scaffold.
